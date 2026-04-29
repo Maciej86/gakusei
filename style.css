@@ -462,6 +462,17 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   cursor: not-allowed;
 }
 
+/* Pokaż odpowiedź */
+.btn--hint {
+  background: var(--surface-hi);
+  border: 1px solid var(--border-soft);
+  color: var(--text-2);
+  padding: 14px 16px;
+  font-family: var(--font-jp);
+  font-size: 18px;
+}
+.btn--hint:hover { color: var(--gold); border-color: rgba(199,145,42,.35); }
+
 /* Wyczyść */
 .btn--clear {
   background: var(--surface-hi);

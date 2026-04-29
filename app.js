@@ -38,6 +38,7 @@ let currentWord   = null;
 let currentMode   = 'pl'; // 'pl' | 'romaji'
 let currentInput  = '';
 let isChecked     = false;
+let isWrong       = false;
 let scoreCorrect  = 0;
 let scoreTotal    = 0;
 let wordCount     = 0;
@@ -57,6 +58,7 @@ const backspaceBtn   = $('backspaceBtn');
 const feedbackLine   = $('feedbackLine');
 const checkBtn       = $('checkBtn');
 const nextBtn        = $('nextBtn');
+const hintBtn        = $('hintBtn');
 const clearBtn       = $('clearBtn');
 const hintCard       = $('hintCard');
 const hintAnswer     = $('hintAnswer');
@@ -88,20 +90,31 @@ function buildKeyboard(rows, containerId) {
 /* =========================================================
    Obsługa wejścia
    ========================================================= */
+function resetWrongState() {
+  isChecked = false;
+  isWrong   = false;
+  answerBox.classList.remove('is-wrong');
+  feedbackLine.className   = 'feedback-line';
+  feedbackLine.textContent = '';
+}
+
 function handleKanaInput(char) {
-  if (isChecked) return;
+  if (isChecked && !isWrong) return;
+  if (isWrong) resetWrongState();
   currentInput += char;
   refreshAnswerDisplay();
 }
 
 function deleteLastChar() {
-  if (isChecked || currentInput.length === 0) return;
+  if ((isChecked && !isWrong) || currentInput.length === 0) return;
+  if (isWrong) resetWrongState();
   currentInput = [...currentInput].slice(0, -1).join('');
   refreshAnswerDisplay();
 }
 
 function clearInput() {
-  if (isChecked) return;
+  if (isChecked && !isWrong) return;
+  if (isWrong) resetWrongState();
   currentInput = '';
   refreshAnswerDisplay();
   answerBox.classList.remove('is-correct', 'is-wrong');
@@ -131,6 +144,7 @@ function loadWord() {
   currentMode  = Math.random() < 0.5 ? 'pl' : 'romaji';
   currentInput = '';
   isChecked    = false;
+  isWrong      = false;
   wordCount++;
 
   // Animacja zmiany słowa
@@ -174,12 +188,14 @@ function checkAnswer() {
   const correct = currentInput.trim() === currentWord.hiragana;
 
   if (correct) {
+    isWrong = false;
     scoreCorrect++;
     scoreCorrectEl.textContent = scoreCorrect;
     answerBox.classList.add('is-correct');
     feedbackLine.className   = 'feedback-line is-correct';
     feedbackLine.textContent = getCorrectMessage();
   } else {
+    isWrong = true;
     answerBox.classList.add('is-wrong');
     feedbackLine.className   = 'feedback-line is-wrong';
     feedbackLine.textContent = 'Niepoprawnie – sprawdź poprawny zapis poniżej.';
@@ -224,6 +240,10 @@ document.querySelectorAll('.kb-tab').forEach(tab => {
    ========================================================= */
 checkBtn.addEventListener('click', checkAnswer);
 nextBtn.addEventListener('click', loadWord);
+hintBtn.addEventListener('click', () => {
+  hintAnswer.textContent = currentWord.hiragana;
+  hintCard.hidden = false;
+});
 clearBtn.addEventListener('click', clearInput);
 backspaceBtn.addEventListener('click', deleteLastChar);
 
