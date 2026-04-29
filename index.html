@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>日本語の勉強 · Nauka Hiragany</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Noto+Serif+JP:wght@300;400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Dekoracja tła -->
+  <div class="bg-layer" aria-hidden="true">
+    <div class="bg-orb bg-orb--1"></div>
+    <div class="bg-orb bg-orb--2"></div>
+    <div class="bg-orb bg-orb--3"></div>
+    <div class="bg-kanji">平仮名</div>
+  </div>
+
+  <!-- Nagłówek -->
+  <header class="header">
+    <div class="header__brand">
+      <span class="header__seal">日</span>
+      <div>
+        <h1 class="header__title">Nauka Hiragany</h1>
+        <p class="header__sub">Japońskie znaki pisma</p>
+      </div>
+    </div>
+    <div class="header__score">
+      <div class="score-block">
+        <span class="score-block__num" id="scoreCorrect">0</span>
+        <span class="score-block__lbl">Poprawne</span>
+      </div>
+      <span class="score-sep">·</span>
+      <div class="score-block">
+        <span class="score-block__num" id="scoreTotal">0</span>
+        <span class="score-block__lbl">Łącznie</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Główna zawartość -->
+  <main class="main">
+
+    <div class="quiz-card" id="quizCard">
+
+      <!-- Badge trybu -->
+      <div class="quiz-card__top">
+        <span class="mode-badge" id="modeBadge">Polski → Hiragana</span>
+        <span class="word-counter" id="wordCounter"></span>
+      </div>
+
+      <!-- Wyświetlane słowo -->
+      <section class="prompt-section">
+        <p class="section-label">Zapisz w hiraganie</p>
+        <div class="prompt-word" id="promptWord">
+          <span class="prompt-word__text" id="wordText">読み込み中…</span>
+        </div>
+      </section>
+
+      <!-- Pole odpowiedzi -->
+      <section class="answer-section">
+        <div class="answer-box" id="answerBox">
+          <span class="answer-box__placeholder" id="answerPlaceholder">Kliknij znaki na klawiaturze…</span>
+          <span class="answer-box__text" id="answerText"></span>
+          <button class="answer-box__back" id="backspaceBtn" title="Usuń ostatni znak" aria-label="Usuń">⌫</button>
+        </div>
+        <div class="feedback-line" id="feedbackLine" aria-live="polite"></div>
+      </section>
+
+      <!-- Klawiatura hiragany -->
+      <section class="kb-section">
+        <div class="kb-tabs" role="tablist" aria-label="Grupy znaków">
+          <button class="kb-tab active" data-tab="seion"   role="tab" aria-selected="true">清音</button>
+          <button class="kb-tab"        data-tab="dakuten" role="tab" aria-selected="false">濁音・半濁</button>
+          <button class="kb-tab"        data-tab="small"   role="tab" aria-selected="false">小文字</button>
+        </div>
+        <div class="kb-grid" id="kb-seion"   role="tabpanel"></div>
+        <div class="kb-grid kb-grid--hidden" id="kb-dakuten" role="tabpanel"></div>
+        <div class="kb-grid kb-grid--hidden" id="kb-small"   role="tabpanel"></div>
+      </section>
+
+      <!-- Przyciski akcji -->
+      <section class="actions">
+        <button class="btn btn--check"  id="checkBtn">Sprawdź</button>
+        <button class="btn btn--next"   id="nextBtn"  disabled>Następne słowo →</button>
+        <button class="btn btn--clear"  id="clearBtn" title="Wyczyść odpowiedź">✕</button>
+      </section>
+
+    </div>
+
+    <!-- Karta z podpowiedzią -->
+    <div class="hint-card" id="hintCard" hidden>
+      <p class="hint-card__label">Poprawna odpowiedź</p>
+      <p class="hint-card__answer" id="hintAnswer"></p>
+    </div>
+
+  </main>
+
+  <script src="words.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
