@@ -572,3 +572,40 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   .kb-grid { gap: 3px; }
   .kana-key { font-size: 14px; padding: 8px 2px; }
 }
+
+/* =========================================================
+   Nawigacja trybów
+   ========================================================= */
+.mode-nav {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border-bottom: 2px solid var(--border, rgba(255,255,255,.1));
+  margin-bottom: 0;
+}
+
+.mode-nav__tab {
+  background: none;
+  border: none;
+  padding: 12px 32px;
+  font-family: var(--font-body, sans-serif);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-2, #888);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: color .2s, border-color .2s;
+}
+
+.mode-nav__tab:hover { color: var(--text-1, #fff); }
+
+.mode-nav__tab.active {
+  color: var(--text-1, #fff);
+  border-bottom-color: var(--accent, #e85d5d);
+}
+
+/* =========================================================
+   Panele trybów
+   ========================================================= */
+.mode-panel.hidden { display: none; }

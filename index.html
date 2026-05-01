@@ -41,8 +41,15 @@
     </div>
   </header>
 
+  <nav class="mode-nav" role="tablist" aria-label="Tryb nauki">
+    <button class="mode-nav__tab active" data-mode="hiragana" role="tab" aria-selected="true">Hiragana</button>
+    <button class="mode-nav__tab" data-mode="words" role="tab" aria-selected="false">Słowa</button>
+  </nav>
+
   <!-- Główna zawartość -->
   <main class="main">
+
+    <div id="mode-hiragana" class="mode-panel">
 
     <div class="quiz-card" id="quizCard">
 
@@ -96,6 +103,12 @@
     <div class="hint-card" id="hintCard" hidden>
       <p class="hint-card__label">Poprawna odpowiedź</p>
       <p class="hint-card__answer" id="hintAnswer"></p>
+    </div>
+
+    </div><!-- /#mode-hiragana -->
+
+    <div id="mode-words" class="mode-panel hidden">
+      <!-- wypełnione w następnym tasku -->
     </div>
 
   </main>
