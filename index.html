@@ -42,6 +42,7 @@
   </header>
 
   <nav class="mode-nav" role="tablist" aria-label="Tryb nauki">
+    <button class="mode-nav__tab" data-mode="chars" role="tab" aria-selected="false">Znaki</button>
     <button class="mode-nav__tab active" data-mode="hiragana" role="tab" aria-selected="true">Pisownia</button>
     <button class="mode-nav__tab" data-mode="words" role="tab" aria-selected="false">Słowa</button>
     <button class="mode-nav__tab" data-mode="dict" role="tab" aria-selected="false">Słownik</button>
@@ -56,7 +57,7 @@
 
       <!-- Badge trybu -->
       <div class="quiz-card__top">
-        <span class="mode-badge" id="modeBadge">Polski → Hiragana</span>
+        <span class="mode-badge">Polski → Hiragana</span>
         <span class="word-counter" id="wordCounter"></span>
       </div>
 
@@ -112,6 +113,7 @@
   <div class="quiz-card">
 
     <div class="quiz-card__top">
+      <span class="mode-badge" id="modeBadge">Słowa</span>
       <span class="word-counter" id="wq-counter"></span>
     </div>
 
@@ -149,9 +151,58 @@
       </div>
     </div>
 
+    <div id="mode-chars" class="mode-panel hidden">
+
+      <!-- Ekran wyboru znaków -->
+      <div class="quiz-card quiz-card__chars" id="chars-setup">
+        <div class="quiz-card__top">
+          <div style="display:flex;gap:.75rem;align-items:center">
+            <span class="word-counter" id="chars-selected-count">Wybrano: 0</span>
+            <!-- <button class="btn-link hidden" id="chars-change-btn">Zmień znaki ↩</button> -->
+            <button class="btn-link" id="cq-change-btn">Zmień znaki ↩</button>
+          </div>
+        </div>
+        <div class="chars-accordion" id="charsAccordion">
+          <div class="chars-accordion__inner">
+            <div id="chars-selector"></div>
+          </div>
+          <section class="actions">
+            <button class="btn btn--check" id="chars-start-btn" disabled>Ćwicz →</button>
+          </section>
+        </div>
+        
+      </div>
+
+      <!-- Ekran quizu -->
+      <div class="quiz-card hidden" id="chars-quiz">
+        <div class="quiz-card__top">
+          <span class="mode-badge">Znaki do nauki</span>
+          <span class="word-counter" id="cq-counter"></span>
+        </div>
+        <section class="prompt-section">
+          <p class="section-label">Wskaż znak hiragany</p>
+          <div class="prompt-word">
+            <span class="prompt-word__text" id="cq-romaji"></span>
+          </div>
+        </section>
+        <section class="chars-choices" id="cq-choices">
+          <button class="char-btn" data-index="0"></button>
+          <button class="char-btn" data-index="1"></button>
+          <button class="char-btn" data-index="2"></button>
+          <button class="char-btn" data-index="3"></button>
+          <button class="char-btn" data-index="4"></button>
+          <button class="char-btn" data-index="5"></button>
+          <button class="char-btn" data-index="6"></button>
+          <button class="char-btn" data-index="7"></button>
+        </section>
+      </div>
+
+    </div><!-- /#mode-chars -->
+
   </main>
 
-  <script src="words.js"></script>
-  <script src="app.js"></script>
+  <script src="js/words.js"></script>
+  <script src="js/kana.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

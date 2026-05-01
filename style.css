@@ -179,6 +179,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
    Karta quizu
    ========================================================= */
 .quiz-card {
+  margin-bottom: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--r-lg);
@@ -707,3 +708,227 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   font-size: 18px;
   text-align: center;
 }
+
+/* =========================================================
+   Tryb: Znaki
+   ========================================================= */
+.quiz-card__chars {
+  padding-bottom: 0;
+}
+
+.chars-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.chars-group-card {
+  cursor: pointer;
+  display: block;
+}
+
+.chars-group-card__check { display: none; }
+
+.chars-group-card__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 16px;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r);
+  background: var(--surface-hi);
+  transition: border-color .2s var(--ease), background .2s var(--ease);
+  user-select: none;
+}
+
+.chars-group-card:hover .chars-group-card__inner {
+  border-color: var(--text-3);
+  background: var(--surface-hihi);
+}
+
+.chars-group-card__check:checked + .chars-group-card__inner {
+  border-color: var(--red-bright);
+  background: var(--red-glow-soft);
+}
+
+.chars-group-card__jp {
+  font-family: var(--font-jp);
+  font-size: 28px;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.chars-group-card__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-1);
+  letter-spacing: .04em;
+}
+
+.chars-group-card__sample {
+  font-family: var(--font-jp);
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.chars-choices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 8px 0 4px;
+}
+
+.char-btn {
+  padding: 14px 8px;
+  border-radius: var(--r);
+  border: 2px solid var(--border-soft);
+  background: var(--surface-hi);
+  color: var(--text-1);
+  font-family: var(--font-jp);
+  font-size: 28px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+  text-align: center;
+  line-height: 1;
+}
+
+.char-btn:hover:not(:disabled) {
+  background: var(--surface-hihi);
+  border-color: var(--border-soft);
+}
+
+.char-btn:disabled { cursor: default; opacity: .7; }
+
+.char-btn.is-correct {
+  background: var(--green-glow-soft);
+  border-color: var(--green);
+  color: var(--green);
+  opacity: 1;
+}
+
+.char-btn.is-wrong {
+  background: var(--red-glow-soft);
+  border-color: var(--red-bright);
+  color: var(--red-bright);
+  opacity: 1;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--text-2);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color .15s;
+}
+
+.btn-link:hover { color: var(--text-1); }
+
+.chars-accordion {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    max-height 0.35s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.chars-accordion.is-open {
+  max-height: 670px; /* możesz zwiększyć jeśli selector jest dłuższy */
+  opacity: 1;
+  transform: translateY(0);
+  padding-bottom: 30px;
+}
+
+.chars-accordion__inner {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* =========================================================
+   Wybór indywidualnych znaków
+   ========================================================= */
+.kana-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.kana-group + .kana-group { margin-top: 16px; }
+
+.kana-group__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kana-group__title {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.kana-group__toggle {
+  font-size: 11px;
+  color: var(--text-2);
+  cursor: pointer;
+  padding: 2px 0;
+  background: none;
+  border: none;
+  font-family: var(--font-ui);
+  transition: color .15s;
+}
+.kana-group__toggle:hover { color: var(--text-1); }
+
+.kana-select-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.kana-sel-btn {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--surface-hi);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  user-select: none;
+}
+
+.kana-sel-btn:hover { background: var(--surface-hihi); border-color: var(--text-3); }
+
+.kana-sel-btn.selected {
+  border-color: var(--red-bright);
+  background: var(--red-glow-soft);
+}
+
+.kana-sel-btn__h {
+  font-family: var(--font-jp);
+  font-size: 20px;
+  color: var(--text-1);
+  line-height: 1;
+}
+
+.kana-sel-btn__r {
+  font-size: 9px;
+  color: var(--text-2);
+  letter-spacing: .03em;
+}
+
+.kana-sel-btn.selected .kana-sel-btn__h { color: var(--red-bright); }
+.kana-sel-btn.selected .kana-sel-btn__r { color: var(--red-bright); opacity: .7; }

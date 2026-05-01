@@ -49,6 +49,10 @@ let wqWordCount   = 0;
 let wqCurrentWord = null;
 let wqTimer       = null;
 let wqAnimTimer   = null;
+let cqPool        = [];
+let cqCurrent     = null;
+let cqCount       = 0;
+let cqTimer       = null;
 
 /* =========================================================
    Elementy DOM
@@ -74,6 +78,17 @@ const wordTranslation   = $('wordTranslation');
 const wqWordText  = $('wq-wordText');
 const wqCounter   = $('wq-counter');
 const wqChoices   = [...document.querySelectorAll('.choice-btn')];
+
+const cqRomaji      = $('cq-romaji');
+const cqCounter     = $('cq-counter');
+const cqChoices     = [...document.querySelectorAll('.char-btn')];
+const charsSetup    = $('chars-setup');
+const charsQuiz          = $('chars-quiz');
+const charsStartBtn      = $('chars-start-btn');
+const cqChangeBtn        = $('cq-change-btn');
+const charsSelector      = $('chars-selector');
+const charsSelectedCount = $('chars-selected-count');
+const charsAccordion = $('charsAccordion');
 
 const ALL_WORDS = [...newWords, ...reviewSoon, ...reviewLater];
 
@@ -341,6 +356,205 @@ backspaceBtn.addEventListener('click', deleteLastChar);
 
 wqChoices.forEach(btn => btn.addEventListener('click', () => handleWordAnswer(btn)));
 
+/* =========================================================
+   Tryb: Znaki
+   ========================================================= */
+const KANA_LS_KEY = 'charsSelection';
+
+const KANA_GROUPS = [
+  { key: 'seion',   label: '清音 · Hiragana', data: KANA_SEION },
+  { key: 'dakuten', label: '濁音 · Dakuten',  data: KANA_DAKUTEN },
+];
+
+function buildCharsSelector(savedSet) {
+  charsSelector.innerHTML = '';
+  KANA_GROUPS.forEach(group => {
+    const section = document.createElement('div');
+    section.className = 'kana-group';
+
+    const header = document.createElement('div');
+    header.className = 'kana-group__header';
+
+    const title = document.createElement('span');
+    title.className = 'kana-group__title';
+    title.textContent = group.label;
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'kana-group__toggle';
+
+    const grid = document.createElement('div');
+    grid.className = 'kana-select-grid';
+
+    group.data.forEach(kana => {
+      const btn = document.createElement('button');
+      btn.className = 'kana-sel-btn' + (savedSet.has(kana.h) ? ' selected' : '');
+      btn.dataset.h = kana.h;
+      btn.innerHTML = `<span class="kana-sel-btn__h">${kana.h}</span><span class="kana-sel-btn__r">${kana.r}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+        updateCharsCount();
+      });
+      grid.appendChild(btn);
+    });
+
+    const allSelected = () => group.data.every(k => savedSet.has(k.h) ||
+      grid.querySelector(`[data-h="${k.h}"]`)?.classList.contains('selected'));
+
+    toggleBtn.textContent = 'Zaznacz wszystkie';
+    toggleBtn.addEventListener('click', () => {
+      const btns = [...grid.querySelectorAll('.kana-sel-btn')];
+      const anyUnselected = btns.some(b => !b.classList.contains('selected'));
+      btns.forEach(b => b.classList.toggle('selected', anyUnselected));
+      toggleBtn.textContent = anyUnselected ? 'Odznacz wszystkie' : 'Zaznacz wszystkie';
+      updateCharsCount();
+    });
+
+    header.appendChild(title);
+    header.appendChild(toggleBtn);
+    section.appendChild(header);
+    section.appendChild(grid);
+    charsSelector.appendChild(section);
+  });
+  updateCharsCount();
+}
+
+function getSelectedKana() {
+  return [...charsSelector.querySelectorAll('.kana-sel-btn.selected')]
+    .map(btn => {
+      const h = btn.dataset.h;
+      return KANA_SEION.find(k => k.h === h) || KANA_DAKUTEN.find(k => k.h === h);
+    })
+    .filter(Boolean);
+}
+
+function updateCharsCount() {
+  const count = charsSelector.querySelectorAll('.kana-sel-btn.selected').length;
+  charsSelectedCount.textContent = `Wybrano: ${count}`;
+  charsStartBtn.disabled = count < 2;
+}
+
+function getSavedPool() {
+  try {
+    const saved = localStorage.getItem(KANA_LS_KEY);
+    if (!saved) return null;
+    const arr = JSON.parse(saved);
+    if (!Array.isArray(arr) || arr.length < 2) return null;
+    const set = new Set(arr);
+    const pool = [...KANA_SEION, ...KANA_DAKUTEN].filter(k => set.has(k.h));
+    return pool.length >= 2 ? pool : null;
+  } catch (_) { return null; }
+}
+
+function openCharsSetup() {
+  const savedSet = new Set((getSavedPool() || []).map(k => k.h));
+  buildCharsSelector(savedSet);
+  charsSetup.classList.remove('hidden');
+  charsQuiz.classList.add('hidden');
+}
+
+function startCharsQuiz(pool) {
+  localStorage.setItem(KANA_LS_KEY, JSON.stringify(pool.map(k => k.h)));
+  cqPool    = pool;
+  cqCount   = 0;
+  cqCurrent = null;
+  charsSetup.classList.add('hidden');
+  charsQuiz.classList.remove('hidden');
+  loadCharQuiz();
+}
+
+function loadCharQuiz() {
+  clearTimeout(cqTimer);
+  const prev = cqCurrent;
+  let next = cqPool[Math.floor(Math.random() * cqPool.length)];
+  if (cqPool.length > 1) {
+    while (next === prev) next = cqPool[Math.floor(Math.random() * cqPool.length)];
+  }
+  cqCurrent = next;
+  cqCount++;
+  cqCounter.textContent = `Znak #${cqCount}`;
+
+  cqRomaji.classList.add('is-animating');
+  setTimeout(() => {
+    cqRomaji.textContent = next.r;
+    cqRomaji.classList.remove('is-animating');
+    cqRomaji.classList.add('word-in');
+    setTimeout(() => cqRomaji.classList.remove('word-in'), 400);
+  }, 200);
+
+  const wrongPool = cqPool.filter(k => k !== next).sort(() => Math.random() - 0.5);
+  const wrongs    = wrongPool.slice(0, Math.min(7, wrongPool.length));
+  const options   = [next, ...wrongs].sort(() => Math.random() - 0.5);
+
+  cqChoices.forEach((btn, i) => {
+    btn.textContent = options[i] ? options[i].h : '';
+    btn.className   = 'char-btn';
+    btn.disabled    = !options[i];
+    btn.dataset.correct = options[i] === next ? 'true' : 'false';
+  });
+}
+
+function handleCharAnswer(btn) {
+  cqChoices.forEach(b => { b.disabled = true; });
+
+  scoreTotal++;
+  scoreTotalEl.textContent = scoreTotal;
+
+  if (btn.dataset.correct === 'true') {
+    btn.classList.add('is-correct');
+    scoreCorrect++;
+    scoreCorrectEl.textContent = scoreCorrect;
+  } else {
+    btn.classList.add('is-wrong');
+    cqChoices.find(b => b.dataset.correct === 'true').classList.add('is-correct');
+  }
+
+  cqTimer = setTimeout(loadCharQuiz, AUTO_ADVANCE_DELAY);
+}
+
+function initCharsMode() {
+  const pool = getSavedPool();
+
+  if (pool) {
+    cqPool    = pool;
+    cqCount   = 0;
+    cqCurrent = null;
+
+    charsSetup.classList.add('hidden');
+    charsQuiz.classList.remove('hidden');
+
+    charsAccordion.classList.remove('is-open');
+    cqChangeBtn.textContent = 'Zmień znaki ↩';
+
+    loadCharQuiz();
+  } else {
+    openCharsSetup();
+
+    // 🔥 KLUCZOWE: otwórz selector
+    charsAccordion.classList.add('is-open');
+    cqChangeBtn.textContent = 'Ukryj znaki ↩';
+  }
+}
+
+charsStartBtn.addEventListener('click', () => {
+  const pool = getSelectedKana();
+
+  if (pool.length >= 2) {
+    startCharsQuiz(pool);
+
+    charsAccordion.classList.remove('is-open');
+    cqChangeBtn.textContent = 'Zmień znaki ↩';
+  }
+});
+
+cqChangeBtn.addEventListener('click', () => {
+  clearTimeout(cqTimer);
+  openCharsSetup();
+  const isOpen = charsAccordion.classList.toggle('is-open');
+  cqChangeBtn.textContent = isOpen ? 'Ukryj znaki ↩' : 'Zmień znaki ↩';
+});
+
+cqChoices.forEach(btn => btn.addEventListener('click', () => handleCharAnswer(btn)));
+
 document.querySelectorAll('.mode-nav__tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.mode-nav__tab').forEach(t => {
@@ -357,8 +571,10 @@ document.querySelectorAll('.mode-nav__tab').forEach(tab => {
     clearTimeout(autoAdvanceTimer);
     clearTimeout(wqTimer);
     clearTimeout(wqAnimTimer);
+    clearTimeout(cqTimer);
 
     if (mode === 'words') loadWordQuiz();
+    if (mode === 'chars') initCharsMode();
     if (mode === 'dict') {
       buildDictTable(newWords,    'dict-newWords');
       buildDictTable(reviewSoon,  'dict-reviewSoon');
