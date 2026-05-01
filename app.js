@@ -43,6 +43,9 @@ let scoreCorrect  = 0;
 let scoreTotal    = 0;
 let wordCount     = 0;
 let autoAdvanceTimer = null;
+let wqWordCount   = 0;
+let wqCurrentWord = null;
+let wqTimer       = null;
 
 /* =========================================================
    Elementy DOM
@@ -65,6 +68,11 @@ const hintAnswer     = $('hintAnswer');
 const scoreCorrectEl    = $('scoreCorrect');
 const scoreTotalEl      = $('scoreTotal');
 const wordTranslation   = $('wordTranslation');
+const wqWordText  = $('wq-wordText');
+const wqCounter   = $('wq-counter');
+const wqChoices   = [...document.querySelectorAll('.choice-btn')];
+
+const ALL_WORDS = [...newWords, ...reviewSoon, ...reviewLater];
 
 /* =========================================================
    Budowanie klawiatury
@@ -137,6 +145,57 @@ function pickRandomWord() {
   const r = Math.random();
   const pool = r < 0.5 ? newWords : r < 0.8 ? reviewSoon : reviewLater;
   return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function loadWordQuiz() {
+  clearTimeout(wqTimer);
+
+  const prev = wqCurrentWord;
+  let word;
+  do {
+    word = pickRandomWord();
+  } while (word === prev);
+  wqCurrentWord = word;
+  wqWordCount++;
+
+  wqCounter.textContent = `Słowo #${wqWordCount}`;
+
+  wqWordText.classList.add('is-animating');
+  setTimeout(() => {
+    wqWordText.textContent = word.hiragana;
+    wqWordText.classList.remove('is-animating');
+    wqWordText.classList.add('word-in');
+    setTimeout(() => wqWordText.classList.remove('word-in'), 400);
+  }, 200);
+
+  const wrongPool = ALL_WORDS.filter(w => w !== word);
+  const wrongs = [];
+  while (wrongs.length < 3) {
+    const pick = wrongPool[Math.floor(Math.random() * wrongPool.length)];
+    if (!wrongs.includes(pick)) wrongs.push(pick);
+  }
+
+  const options = [word, ...wrongs].sort(() => Math.random() - 0.5);
+
+  wqChoices.forEach((btn, i) => {
+    btn.textContent = options[i].pl;
+    btn.className = 'choice-btn';
+    btn.disabled = false;
+    btn.dataset.correct = options[i] === word ? 'true' : 'false';
+  });
+}
+
+function handleWordAnswer(btn) {
+  wqChoices.forEach(b => { b.disabled = true; });
+
+  if (btn.dataset.correct === 'true') {
+    btn.classList.add('is-correct');
+  } else {
+    btn.classList.add('is-wrong');
+    wqChoices.find(b => b.dataset.correct === 'true').classList.add('is-correct');
+  }
+
+  wqTimer = setTimeout(loadWordQuiz, 3000);
 }
 
 function loadWord() {
@@ -256,6 +315,28 @@ hintBtn.addEventListener('click', () => {
 });
 clearBtn.addEventListener('click', clearInput);
 backspaceBtn.addEventListener('click', deleteLastChar);
+
+wqChoices.forEach(btn => btn.addEventListener('click', () => handleWordAnswer(btn)));
+
+document.querySelectorAll('.mode-nav__tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.mode-nav__tab').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-selected', 'false');
+    });
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+
+    const mode = tab.dataset.mode;
+    document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
+    document.getElementById(`mode-${mode}`).classList.remove('hidden');
+
+    clearTimeout(autoAdvanceTimer);
+    clearTimeout(wqTimer);
+
+    if (mode === 'words') loadWordQuiz();
+  });
+});
 
 /* =========================================================
    Skróty klawiszowe
