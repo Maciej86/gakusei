@@ -20,7 +20,16 @@ Podejście: **jedna strona, dwie ukryte sekcje** (brak nowych plików HTML, brak
 - `style.css` — style dla menu i przycisków odpowiedzi
 - `words.js` — bez zmian
 
-Istniejąca logika hiragany (`#mode-hiragana`) pozostaje niezmieniona.
+Tryb hiragany (`#mode-hiragana`) otrzymuje jedną zmianę behawioralną opisaną poniżej.
+
+---
+
+## Zmiany w trybie „Nauka Hiragany"
+
+- Po poprawnej odpowiedzi (przycisk „Sprawdź") odczekaj **3 sekundy** i automatycznie załaduj następne słowo
+- Przycisk „Następne słowo →" zostaje **usunięty** z HTML i JS
+- Przy błędnej odpowiedzi zachowanie bez zmian — użytkownik poprawia i klika „Sprawdź" ponownie
+- `clearTimeout` aktywnego timera przy przełączeniu zakładki (tak samo jak w trybie słów)
 
 ---
 
@@ -75,6 +84,6 @@ Istniejąca logika hiragany (`#mode-hiragana`) pozostaje niezmieniona.
 
 | Plik | Zmiana |
 |------|--------|
-| `index.html` | Dodanie `<nav>` z zakładkami + sekcja `#mode-words` z gridem odpowiedzi |
-| `app.js` | Funkcje: `initWordsMode`, `loadWordQuiz`, `handleWordAnswer` + obsługa zakładek |
+| `index.html` | Dodanie `<nav>` z zakładkami + sekcja `#mode-words` z gridem odpowiedzi; usunięcie przycisku `#nextBtn` |
+| `app.js` | Tryb hiragany: auto-advance po 3s przy poprawnej odpowiedzi, usunięcie logiki `nextBtn`; nowe funkcje: `initWordsMode`, `loadWordQuiz`, `handleWordAnswer` + obsługa zakładek |
 | `style.css` | `.mode-nav`, `.mode-nav__tab`, `.word-choices`, `.choice-btn`, `.choice-btn.is-correct`, `.choice-btn.is-wrong` |
