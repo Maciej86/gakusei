@@ -29,9 +29,9 @@ const newWords = [
 const reviewSoon = [
   { pl: "góra/nad", romaji: "ue", hiragana: "うえ" },
   { pl: "iść/jechać", romaji: "iku", hiragana: "いく" },
-  { pl: "słuchać / pytać", romaji: "kiku", hiragana: "きく" },
+  { pl: "słuchać/pytać", romaji: "kiku", hiragana: "きく" },
   { pl: "pisać", romaji: "kaku", hiragana: "かく" },
-  { pl: "zbocze / wzniesienie", romaji: "zaka", hiragana: "ざか" },
+  { pl: "zbocze/wzniesienie", romaji: "zaka", hiragana: "ざか" },
   { pl: "tutaj", romaji: "koko", hiragana: "ここ" },
   { pl: "tam", romaji: "soko", hiragana: "そこ" },
 ];

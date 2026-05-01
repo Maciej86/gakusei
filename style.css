@@ -282,8 +282,8 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
 .answer-box:hover { border-color: rgba(220,215,240,.18); }
 
 .answer-box.is-correct {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 3px var(--gold-glow-soft), 0 0 24px var(--gold-glow);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-glow-soft), 0 0 24px var(--green-glow);
 }
 
 .answer-box.is-wrong {
@@ -343,7 +343,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   text-align: center;
   transition: opacity .25s;
 }
-.feedback-line.is-correct { color: var(--gold-bright); }
+.feedback-line.is-correct { color: var(--green); }
 .feedback-line.is-wrong   { color: var(--red-bright); }
 
 /* =========================================================
