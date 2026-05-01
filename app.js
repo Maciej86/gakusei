@@ -34,6 +34,8 @@ const KB_SMALL = [
 /* =========================================================
    Stan aplikacji
    ========================================================= */
+const AUTO_ADVANCE_DELAY = 1000;
+
 let currentWord   = null;
 let currentMode   = 'pl'; // 'pl' | 'romaji'
 let currentInput  = '';
@@ -187,14 +189,19 @@ function loadWordQuiz() {
 function handleWordAnswer(btn) {
   wqChoices.forEach(b => { b.disabled = true; });
 
+  scoreTotal++;
+  scoreTotalEl.textContent = scoreTotal;
+
   if (btn.dataset.correct === 'true') {
     btn.classList.add('is-correct');
+    scoreCorrect++;
+    scoreCorrectEl.textContent = scoreCorrect;
   } else {
     btn.classList.add('is-wrong');
     wqChoices.find(b => b.dataset.correct === 'true').classList.add('is-correct');
   }
 
-  wqTimer = setTimeout(loadWordQuiz, 3000);
+  wqTimer = setTimeout(loadWordQuiz, AUTO_ADVANCE_DELAY);
 }
 
 function loadWord() {
@@ -262,7 +269,7 @@ function checkAnswer() {
     const other = currentWord.pl;
     wordTranslation.textContent = `(${other})`;
     wordTranslation.classList.remove('hidden');
-    autoAdvanceTimer = setTimeout(loadWord, 3000);
+    autoAdvanceTimer = setTimeout(loadWord, AUTO_ADVANCE_DELAY);
   } else {
     isWrong = true;
     answerBox.classList.add('is-wrong');
