@@ -132,13 +132,19 @@ function refreshAnswerDisplay() {
 /* =========================================================
    Ładowanie nowego słowa
    ========================================================= */
+function pickRandomWord() {
+  const r = Math.random();
+  const pool = r < 0.5 ? newWords : r < 0.8 ? reviewSoon : reviewLater;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 function loadWord() {
   const prev = currentWord;
   let next;
   // Unikaj powtórzenia tego samego słowa z rzędu
   do {
-    next = WORDS[Math.floor(Math.random() * WORDS.length)];
-  } while (WORDS.length > 1 && next === prev);
+    next = pickRandomWord();
+  } while (next === prev);
 
   currentWord  = next;
   currentMode  = Math.random() < 0.5 ? 'pl' : 'romaji';
