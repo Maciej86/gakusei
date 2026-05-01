@@ -62,8 +62,9 @@ const hintBtn        = $('hintBtn');
 const clearBtn       = $('clearBtn');
 const hintCard       = $('hintCard');
 const hintAnswer     = $('hintAnswer');
-const scoreCorrectEl = $('scoreCorrect');
-const scoreTotalEl   = $('scoreTotal');
+const scoreCorrectEl    = $('scoreCorrect');
+const scoreTotalEl      = $('scoreTotal');
+const wordTranslation   = $('wordTranslation');
 
 /* =========================================================
    Budowanie klawiatury
@@ -172,6 +173,7 @@ function loadWord() {
 
   nextBtn.disabled = true;
   hintCard.hidden  = true;
+  wordTranslation.classList.add('hidden');
 
   refreshAnswerDisplay();
 }
@@ -200,6 +202,9 @@ function checkAnswer() {
     answerBox.classList.add('is-correct');
     feedbackLine.className   = 'feedback-line is-correct';
     feedbackLine.textContent = getCorrectMessage();
+    const other = currentWord.pl;
+    wordTranslation.textContent = `(${other})`;
+    wordTranslation.classList.remove('hidden');
   } else {
     isWrong = true;
     answerBox.classList.add('is-wrong');

@@ -227,8 +227,18 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
 
 .prompt-word {
   min-height: 110px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
 }
+
+.prompt-word__translation {
+  font-family: var(--font-body, sans-serif);
+  font-size: clamp(14px, 2vw, 18px);
+  color: var(--text-2, #888);
+  letter-spacing: .01em;
+}
+
+.prompt-word__translation.hidden { display: none; }
 
 .prompt-word__text {
   font-family: var(--font-disp);
