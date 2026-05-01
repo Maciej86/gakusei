@@ -108,8 +108,28 @@
     </div><!-- /#mode-hiragana -->
 
     <div id="mode-words" class="mode-panel hidden">
-      <!-- wypełnione w następnym tasku -->
+  <div class="quiz-card">
+
+    <div class="quiz-card__top">
+      <span class="word-counter" id="wq-counter"></span>
     </div>
+
+    <section class="prompt-section">
+      <p class="section-label">Co znaczy to słowo?</p>
+      <div class="prompt-word" id="wq-promptWord">
+        <span class="prompt-word__text is-jp" id="wq-wordText"></span>
+      </div>
+    </section>
+
+    <section class="word-choices" id="wq-choices">
+      <button class="choice-btn" data-index="0"></button>
+      <button class="choice-btn" data-index="1"></button>
+      <button class="choice-btn" data-index="2"></button>
+      <button class="choice-btn" data-index="3"></button>
+    </section>
+
+  </div>
+</div>
 
   </main>
 
