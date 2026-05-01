@@ -588,7 +588,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   background: none;
   border: none;
   padding: 12px 32px;
-  font-family: var(--font-body, sans-serif);
+  font-family: var(--font-ui);
   font-size: 15px;
   font-weight: 500;
   color: var(--text-2, #888);
@@ -602,7 +602,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
 
 .mode-nav__tab.active {
   color: var(--text-1, #fff);
-  border-bottom-color: var(--accent, #e85d5d);
+  border-bottom-color: var(--red-bright);
 }
 
 /* =========================================================
