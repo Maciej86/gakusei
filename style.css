@@ -25,6 +25,7 @@
 
   --green:         #3aad6e;
   --green-glow:    rgba(58, 173, 110, 0.28);
+  --green-glow-soft: rgba(58, 173, 110, 0.18);
 
   --font-disp: 'Cormorant Garamond', Georgia, serif;
   --font-jp:   'Noto Serif JP', serif;
@@ -643,7 +644,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
 .choice-btn:disabled { cursor: default; opacity: .7; }
 
 .choice-btn.is-correct {
-  background: rgba(58, 173, 110, .18);
+  background: var(--green-glow-soft);
   border-color: var(--green);
   color: var(--green);
   font-weight: 600;
