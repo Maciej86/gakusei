@@ -641,3 +641,69 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   color: var(--red-bright);
   opacity: 1;
 }
+
+/* =========================================================
+   Słownik
+   ========================================================= */
+.dict-card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.dict-section__title {
+  font-family: var(--font-disp);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.dict-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.dict-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s var(--ease);
+}
+
+.dict-row:last-child { border-bottom: none; }
+
+.dict-row--header { background: var(--surface-hi); }
+
+.dict-row:not(.dict-row--header):hover {
+  background: var(--surface-hihi);
+  cursor: default;
+}
+
+.dict-table__header {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding: 8px 16px;
+}
+
+.dict-table__cell {
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--text-1);
+}
+
+.dict-table__header:last-child,
+.dict-table__cell:last-child { text-align: center; }
+
+.dict-table__cell--jp {
+  font-family: var(--font-jp);
+  font-size: 18px;
+  text-align: center;
+}

@@ -77,6 +77,24 @@ const wqChoices   = [...document.querySelectorAll('.choice-btn')];
 
 const ALL_WORDS = [...newWords, ...reviewSoon, ...reviewLater];
 
+function buildDictTable(words, containerId) {
+  const container = $(containerId);
+  container.innerHTML = `
+    <div class="dict-row dict-row--header">
+      <div class="dict-table__header">Polski</div>
+      <div class="dict-table__header">Romaji</div>
+      <div class="dict-table__header">Hiragana</div>
+    </div>
+    ${words.map(w => `
+      <div class="dict-row">
+        <div class="dict-table__cell">${w.pl}</div>
+        <div class="dict-table__cell">${w.romaji}</div>
+        <div class="dict-table__cell dict-table__cell--jp">${w.hiragana}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
 /* =========================================================
    Budowanie klawiatury
    ========================================================= */
@@ -341,6 +359,11 @@ document.querySelectorAll('.mode-nav__tab').forEach(tab => {
     clearTimeout(wqAnimTimer);
 
     if (mode === 'words') loadWordQuiz();
+    if (mode === 'dict') {
+      buildDictTable(newWords,    'dict-newWords');
+      buildDictTable(reviewSoon,  'dict-reviewSoon');
+      buildDictTable(reviewLater, 'dict-reviewLater');
+    }
   });
 });
 

@@ -44,6 +44,7 @@
   <nav class="mode-nav" role="tablist" aria-label="Tryb nauki">
     <button class="mode-nav__tab active" data-mode="hiragana" role="tab" aria-selected="true">Hiragana</button>
     <button class="mode-nav__tab" data-mode="words" role="tab" aria-selected="false">Słowa</button>
+    <button class="mode-nav__tab" data-mode="dict" role="tab" aria-selected="false">Słownik</button>
   </nav>
 
   <!-- Główna zawartość -->
@@ -130,6 +131,23 @@
 
   </div>
 </div>
+
+    <div id="mode-dict" class="mode-panel hidden">
+      <div class="dict-card">
+        <div class="dict-section">
+          <h2 class="dict-section__title">Nowe słowa</h2>
+          <div class="dict-table" id="dict-newWords"></div>
+        </div>
+        <div class="dict-section">
+          <h2 class="dict-section__title">Powtórz wkrótce</h2>
+          <div class="dict-table" id="dict-reviewSoon"></div>
+        </div>
+        <div class="dict-section">
+          <h2 class="dict-section__title">Powtórz później</h2>
+          <div class="dict-table" id="dict-reviewLater"></div>
+        </div>
+      </div>
+    </div>
 
   </main>
 
