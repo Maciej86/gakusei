@@ -46,6 +46,7 @@ let autoAdvanceTimer = null;
 let wqWordCount   = 0;
 let wqCurrentWord = null;
 let wqTimer       = null;
+let wqAnimTimer   = null;
 
 /* =========================================================
    Elementy DOM
@@ -151,29 +152,27 @@ function loadWordQuiz() {
   clearTimeout(wqTimer);
 
   const prev = wqCurrentWord;
-  let word;
-  do {
-    word = pickRandomWord();
-  } while (word === prev);
+  let word = pickRandomWord();
+  if (ALL_WORDS.length > 1) {
+    while (word === prev) word = pickRandomWord();
+  }
   wqCurrentWord = word;
   wqWordCount++;
 
   wqCounter.textContent = `Słowo #${wqWordCount}`;
 
+  clearTimeout(wqAnimTimer);
   wqWordText.classList.add('is-animating');
-  setTimeout(() => {
+  wqAnimTimer = setTimeout(() => {
     wqWordText.textContent = word.hiragana;
     wqWordText.classList.remove('is-animating');
     wqWordText.classList.add('word-in');
     setTimeout(() => wqWordText.classList.remove('word-in'), 400);
   }, 200);
 
-  const wrongPool = ALL_WORDS.filter(w => w !== word);
-  const wrongs = [];
-  while (wrongs.length < 3) {
-    const pick = wrongPool[Math.floor(Math.random() * wrongPool.length)];
-    if (!wrongs.includes(pick)) wrongs.push(pick);
-  }
+  const wrongPool = ALL_WORDS.filter(w => w !== word)
+    .sort(() => Math.random() - 0.5);
+  const wrongs = wrongPool.slice(0, Math.min(3, wrongPool.length));
 
   const options = [word, ...wrongs].sort(() => Math.random() - 0.5);
 
@@ -333,6 +332,7 @@ document.querySelectorAll('.mode-nav__tab').forEach(tab => {
 
     clearTimeout(autoAdvanceTimer);
     clearTimeout(wqTimer);
+    clearTimeout(wqAnimTimer);
 
     if (mode === 'words') loadWordQuiz();
   });
