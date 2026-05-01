@@ -42,6 +42,7 @@ let isWrong       = false;
 let scoreCorrect  = 0;
 let scoreTotal    = 0;
 let wordCount     = 0;
+let autoAdvanceTimer = null;
 
 /* =========================================================
    Elementy DOM
@@ -57,7 +58,6 @@ const answerPlaceholder = $('answerPlaceholder');
 const backspaceBtn   = $('backspaceBtn');
 const feedbackLine   = $('feedbackLine');
 const checkBtn       = $('checkBtn');
-const nextBtn        = $('nextBtn');
 const hintBtn        = $('hintBtn');
 const clearBtn       = $('clearBtn');
 const hintCard       = $('hintCard');
@@ -140,6 +140,7 @@ function pickRandomWord() {
 }
 
 function loadWord() {
+  clearTimeout(autoAdvanceTimer);
   const prev = currentWord;
   let next;
   // Unikaj powtórzenia tego samego słowa z rzędu
@@ -171,7 +172,6 @@ function loadWord() {
   feedbackLine.className = 'feedback-line';
   feedbackLine.textContent = '';
 
-  nextBtn.disabled = true;
   hintCard.hidden  = true;
   wordTranslation.classList.add('hidden');
 
@@ -205,6 +205,7 @@ function checkAnswer() {
     const other = currentWord.pl;
     wordTranslation.textContent = `(${other})`;
     wordTranslation.classList.remove('hidden');
+    autoAdvanceTimer = setTimeout(loadWord, 3000);
   } else {
     isWrong = true;
     answerBox.classList.add('is-wrong');
@@ -214,7 +215,6 @@ function checkAnswer() {
     hintCard.hidden = false;
   }
 
-  nextBtn.disabled = false;
 }
 
 function getCorrectMessage() {
@@ -250,7 +250,6 @@ document.querySelectorAll('.kb-tab').forEach(tab => {
    Zdarzenia przycisków
    ========================================================= */
 checkBtn.addEventListener('click', checkAnswer);
-nextBtn.addEventListener('click', loadWord);
 hintBtn.addEventListener('click', () => {
   hintAnswer.textContent = currentWord.hiragana;
   hintCard.hidden = false;
