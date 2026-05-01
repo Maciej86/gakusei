@@ -200,11 +200,10 @@ function handleWordAnswer(btn) {
 function loadWord() {
   clearTimeout(autoAdvanceTimer);
   const prev = currentWord;
-  let next;
-  // Unikaj powtórzenia tego samego słowa z rzędu
-  do {
-    next = pickRandomWord();
-  } while (next === prev);
+  let next = pickRandomWord();
+  if (ALL_WORDS.length > 1) {
+    while (next === prev) next = pickRandomWord();
+  }
 
   currentWord  = next;
   currentMode  = Math.random() < 0.5 ? 'pl' : 'romaji';
@@ -342,6 +341,8 @@ document.querySelectorAll('.mode-nav__tab').forEach(tab => {
    Skróty klawiszowe
    ========================================================= */
 document.addEventListener('keydown', e => {
+  const activePanel = document.querySelector('.mode-panel:not(.hidden)');
+  if (!activePanel || activePanel.id !== 'mode-hiragana') return;
   if (e.key === 'Backspace') {
     e.preventDefault();
     deleteLastChar();

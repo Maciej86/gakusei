@@ -457,22 +457,6 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   box-shadow: 0 4px 22px var(--red-glow);
 }
 
-/* Następne słowo */
-.btn--next {
-  flex: 1;
-  background: var(--gold);
-  color: #0d0e1a;
-  font-weight: 600;
-}
-.btn--next:hover:not(:disabled) {
-  background: var(--gold-bright);
-  box-shadow: 0 4px 22px var(--gold-glow);
-}
-.btn--next:disabled {
-  opacity: .35;
-  cursor: not-allowed;
-}
-
 /* Pokaż odpowiedź */
 .btn--hint {
   background: var(--surface-hi);

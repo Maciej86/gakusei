@@ -11,7 +11,7 @@ const newWords = [
   { pl: "oglądać", romaji: "miru", hiragana: "みる" },
   { pl: "idę do domu", romaji: "ie ni iku", hiragana: "いえにいく" },
   { pl: "do/w", romaji: "ni", hiragana: "に" },
-  { pl: "mówić", romaji: "nihanasu", hiragana: "はなす" },
+  { pl: "mówić", romaji: "hanasu", hiragana: "はなす" },
   { pl: "czekać", romaji: "matsu", hiragana: "まつ" },
   { pl: "brać", romaji: "toru", hiragana: "とる" },
   { pl: "czekam tutaj", romaji: "koko ni matsu", hiragana: "ここにまつ" },
@@ -32,6 +32,8 @@ const reviewSoon = [
   { pl: "słuchać / pytać", romaji: "kiku", hiragana: "きく" },
   { pl: "pisać", romaji: "kaku", hiragana: "かく" },
   { pl: "zbocze / wzniesienie", romaji: "zaka", hiragana: "ざか" },
+  { pl: "tutaj", romaji: "koko", hiragana: "ここ" },
+  { pl: "tam", romaji: "soko", hiragana: "そこ" },
 ];
 
 const reviewLater = [
@@ -41,8 +43,6 @@ const reviewLater = [
   { pl: "staw", romaji: "ike", hiragana: "いけ" },
   { pl: "alkohol", romaji: "sake", hiragana: "さけ" },
   { pl: "parasol", romaji: "kasa", hiragana: "かさ" },
-  { pl: "tutaj", romaji: "koko", hiragana: "ここ" },
-  { pl: "tam", romaji: "soko", hiragana: "そこ" },
   { pl: "tam dalej", romaji: "asoko", hiragana: "あそこ" },
   { pl: "nauka", romaji: "gaku", hiragana: "がく" },
   { pl: "student", romaji: "gakusei", hiragana: "がくせい" },
