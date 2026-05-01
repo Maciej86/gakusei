@@ -600,7 +600,7 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
    ========================================================= */
 .word-choices {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
   padding: 8px 0 4px;
 }
