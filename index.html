@@ -57,7 +57,7 @@
 
       <!-- Badge trybu -->
       <div class="quiz-card__top">
-        <span class="mode-badge">Polski → Hiragana</span>
+        <span class="mode-badge" id="modeBadge">Polski → Hiragana</span>
         <span class="word-counter" id="wordCounter"></span>
       </div>
 
@@ -65,7 +65,7 @@
       <section class="prompt-section">
         <p class="section-label">Zapisz w hiraganie</p>
         <div class="prompt-word" id="promptWord">
-          <span class="prompt-word__text" id="wordText">読み込み中…</span>
+          <span class="prompt-word__text" id="wordText" lang="ja">読み込み中…</span>
           <span class="prompt-word__translation hidden" id="wordTranslation"></span>
         </div>
       </section>
@@ -113,14 +113,14 @@
   <div class="quiz-card">
 
     <div class="quiz-card__top">
-      <span class="mode-badge" id="modeBadge">Słowa</span>
+      <span class="mode-badge">Słowa</span>
       <span class="word-counter" id="wq-counter"></span>
     </div>
 
     <section class="prompt-section">
       <p class="section-label">Co znaczy to słowo?</p>
       <div class="prompt-word" id="wq-promptWord">
-        <span class="prompt-word__text is-jp" id="wq-wordText"></span>
+        <span class="prompt-word__text is-jp" id="wq-wordText" lang="ja"></span>
       </div>
     </section>
 
@@ -156,9 +156,8 @@
       <!-- Ekran wyboru znaków -->
       <div class="quiz-card quiz-card__chars" id="chars-setup">
         <div class="quiz-card__top">
-          <div style="display:flex;gap:.75rem;align-items:center">
+          <div class="chars-setup__top-bar">
             <span class="word-counter" id="chars-selected-count">Wybrano: 0</span>
-            <!-- <button class="btn-link hidden" id="chars-change-btn">Zmień znaki ↩</button> -->
             <button class="btn-link" id="cq-change-btn">Zmień znaki ↩</button>
           </div>
         </div>
@@ -182,7 +181,7 @@
         <section class="prompt-section">
           <p class="section-label">Wskaż znak hiragany</p>
           <div class="prompt-word">
-            <span class="prompt-word__text" id="cq-romaji"></span>
+            <span class="prompt-word__text" id="cq-romaji" lang="ja"></span>
           </div>
         </section>
         <section class="chars-choices" id="cq-choices">

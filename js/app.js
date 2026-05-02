@@ -92,22 +92,35 @@ const charsAccordion = $('charsAccordion');
 
 const ALL_WORDS = [...newWords, ...reviewSoon, ...reviewLater];
 
+function makeDictCell(text, extraClass) {
+  const div = document.createElement('div');
+  div.className = 'dict-table__cell' + (extraClass ? ' ' + extraClass : '');
+  div.textContent = text;
+  return div;
+}
+
 function buildDictTable(words, containerId) {
   const container = $(containerId);
-  container.innerHTML = `
-    <div class="dict-row dict-row--header">
-      <div class="dict-table__header">Polski</div>
-      <div class="dict-table__header">Romaji</div>
-      <div class="dict-table__header">Hiragana</div>
-    </div>
-    ${words.map(w => `
-      <div class="dict-row">
-        <div class="dict-table__cell">${w.pl}</div>
-        <div class="dict-table__cell">${w.romaji}</div>
-        <div class="dict-table__cell dict-table__cell--jp">${w.hiragana}</div>
-      </div>
-    `).join('')}
-  `;
+  container.innerHTML = '';
+
+  const header = document.createElement('div');
+  header.className = 'dict-row dict-row--header';
+  ['Polski', 'Romaji', 'Hiragana'].forEach(label => {
+    const h = document.createElement('div');
+    h.className = 'dict-table__header';
+    h.textContent = label;
+    header.appendChild(h);
+  });
+  container.appendChild(header);
+
+  words.forEach(w => {
+    const row = document.createElement('div');
+    row.className = 'dict-row';
+    row.appendChild(makeDictCell(w.pl));
+    row.appendChild(makeDictCell(w.romaji));
+    row.appendChild(makeDictCell(w.hiragana, 'dict-table__cell--jp'));
+    container.appendChild(row);
+  });
 }
 
 /* =========================================================
@@ -180,6 +193,7 @@ function refreshAnswerDisplay() {
 function pickRandomWord() {
   const r = Math.random();
   const pool = r < 0.5 ? newWords : r < 0.8 ? reviewSoon : reviewLater;
+  if (!pool.length) return ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
@@ -212,9 +226,9 @@ function loadWordQuiz() {
   const options = [word, ...wrongs].sort(() => Math.random() - 0.5);
 
   wqChoices.forEach((btn, i) => {
-    btn.textContent = options[i].pl;
+    btn.textContent = options[i] ? options[i].pl : '';
     btn.className = 'choice-btn';
-    btn.disabled = false;
+    btn.disabled = !options[i];
     btn.dataset.correct = options[i] === word ? 'true' : 'false';
   });
 }
@@ -396,9 +410,6 @@ function buildCharsSelector(savedSet) {
       });
       grid.appendChild(btn);
     });
-
-    const allSelected = () => group.data.every(k => savedSet.has(k.h) ||
-      grid.querySelector(`[data-h="${k.h}"]`)?.classList.contains('selected'));
 
     toggleBtn.textContent = 'Zaznacz wszystkie';
     toggleBtn.addEventListener('click', () => {
