@@ -552,6 +552,9 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
   .btn--clear { flex: 0 0 auto; }
   .hint-card__answer { font-size: 32px; }
   .score-block__num  { font-size: 24px; }
+  .mode-nav { flex-direction: column; border-bottom: none; }
+  .mode-nav__tab { padding: 12px 20px; font-size: 14px; text-align: left; border-bottom: none; border-left: 3px solid transparent; margin-bottom: 0; }
+  .mode-nav__tab.active { border-left-color: var(--red-bright); border-bottom-color: transparent; }
 }
 
 @media (max-width: 420px) {
