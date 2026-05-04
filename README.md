@@ -8,6 +8,9 @@ Aplikacja webowa do nauki japońskich znaków hiragany i słownictwa.
 
 ## Tryby nauki
 
+### 🔤 Znaki
+Quiz rozpoznawania znaków hiragany. Wybierasz, które znaki chcesz ćwiczyć, a następnie wskazujesz prawidłowy znak dla podanego romaji spośród ośmiu opcji.
+
 ### ✍️ Pisownia
 Ćwiczenie zapisywania słów w hiraganie. Aplikacja losuje słowo po polsku lub w romaji, a Ty składasz odpowiedź za pomocą klawiatury hiragany na ekranie. Po poprawnej odpowiedzi następne słowo ładuje się automatycznie po 3 sekundach.
 
@@ -56,8 +59,9 @@ Czyste HTML, CSS i JavaScript — bez frameworków, bez bundlera, bez zależnoś
 ## Struktura plików
 
 ```
-index.html   — struktura strony
-app.js       — logika aplikacji
-style.css    — style
-words.js     — baza słów
+index.html      — struktura strony
+style.css       — style
+js/app.js       — logika aplikacji
+js/kana.js      — definicje znaków hiragany
+js/words.js     — baza słów
 ```
