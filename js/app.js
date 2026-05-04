@@ -92,37 +92,6 @@ const charsAccordion = $('charsAccordion');
 
 const ALL_WORDS = [...newWords, ...reviewSoon, ...reviewLater];
 
-function makeDictCell(text, extraClass) {
-  const div = document.createElement('div');
-  div.className = 'dict-table__cell' + (extraClass ? ' ' + extraClass : '');
-  div.textContent = text;
-  return div;
-}
-
-function buildDictTable(words, containerId) {
-  const container = $(containerId);
-  container.innerHTML = '';
-
-  const header = document.createElement('div');
-  header.className = 'dict-row dict-row--header';
-  ['Polski', 'Romaji', 'Hiragana'].forEach(label => {
-    const h = document.createElement('div');
-    h.className = 'dict-table__header';
-    h.textContent = label;
-    header.appendChild(h);
-  });
-  container.appendChild(header);
-
-  words.forEach(w => {
-    const row = document.createElement('div');
-    row.className = 'dict-row';
-    row.appendChild(makeDictCell(w.pl));
-    row.appendChild(makeDictCell(w.romaji));
-    row.appendChild(makeDictCell(w.hiragana, 'dict-table__cell--jp'));
-    container.appendChild(row);
-  });
-}
-
 /* =========================================================
    Budowanie klawiatury
    ========================================================= */
@@ -191,6 +160,8 @@ function refreshAnswerDisplay() {
    Ładowanie nowego słowa
    ========================================================= */
 function pickRandomWord() {
+  const saved = getSavedWords();
+  if (saved) return saved[Math.floor(Math.random() * saved.length)];
   const r = Math.random();
   const pool = r < 0.5 ? newWords : r < 0.8 ? reviewSoon : reviewLater;
   if (!pool.length) return ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
@@ -200,10 +171,11 @@ function pickRandomWord() {
 function loadWordQuiz() {
   clearTimeout(wqTimer);
 
+  const activePool = getSavedWords() || ALL_WORDS;
   const prev = wqCurrentWord;
-  let word = pickRandomWord();
-  if (ALL_WORDS.length > 1) {
-    while (word === prev) word = pickRandomWord();
+  let word = activePool[Math.floor(Math.random() * activePool.length)];
+  if (activePool.length > 1) {
+    while (word === prev) word = activePool[Math.floor(Math.random() * activePool.length)];
   }
   wqCurrentWord = word;
   wqWordCount++;
@@ -219,7 +191,7 @@ function loadWordQuiz() {
     setTimeout(() => wqWordText.classList.remove('word-in'), 400);
   }, 200);
 
-  const wrongPool = ALL_WORDS.filter(w => w !== word)
+  const wrongPool = activePool.filter(w => w !== word)
     .sort(() => Math.random() - 0.5);
   const wrongs = wrongPool.slice(0, Math.min(3, wrongPool.length));
 
@@ -369,6 +341,121 @@ clearBtn.addEventListener('click', clearInput);
 backspaceBtn.addEventListener('click', deleteLastChar);
 
 wqChoices.forEach(btn => btn.addEventListener('click', () => handleWordAnswer(btn)));
+
+/* =========================================================
+   Tryb: Słownik / wybór słów
+   ========================================================= */
+const WORDS_LS_KEY = 'wordsSelection';
+
+const wordsSelectedCount = $('words-selected-count');
+const wordsStartBtn      = $('words-start-btn');
+const wordsSelector      = $('words-selector');
+const wqChangeBtn        = $('wq-change-btn');
+const hiraganaChangeBtn  = $('hiragana-change-btn');
+
+const WORD_GROUPS = [
+  { label: 'Nowe słowa',       data: newWords    },
+  { label: 'Powtórz wkrótce',  data: reviewSoon  },
+  { label: 'Powtórz później',  data: reviewLater },
+];
+
+function getSavedWords() {
+  try {
+    const saved = localStorage.getItem(WORDS_LS_KEY);
+    if (!saved) return null;
+    const arr = JSON.parse(saved);
+    if (!Array.isArray(arr) || arr.length < 2) return null;
+    const set = new Set(arr);
+    const pool = ALL_WORDS.filter(w => set.has(w.pl));
+    return pool.length >= 2 ? pool : null;
+  } catch (_) { return null; }
+}
+
+function buildWordsSelector(savedSet) {
+  wordsSelector.innerHTML = '';
+  WORD_GROUPS.forEach(group => {
+    const section = document.createElement('div');
+    section.className = 'kana-group';
+
+    const header = document.createElement('div');
+    header.className = 'kana-group__header';
+
+    const title = document.createElement('span');
+    title.className = 'kana-group__title';
+    title.textContent = group.label;
+
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'kana-group__toggle';
+
+    const list = document.createElement('div');
+    list.className = 'word-select-list';
+
+    group.data.forEach(word => {
+      const btn = document.createElement('button');
+      btn.className = 'word-sel-btn' + (savedSet.has(word.pl) ? ' selected' : '');
+      btn.dataset.pl = word.pl;
+      btn.innerHTML = `<span class="word-sel-btn__pl">${word.pl} <span class="word-sel-btn__romaji">(${word.romaji})</span></span><span class="word-sel-btn__jp">${word.hiragana}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.toggle('selected');
+        updateWordsCount();
+      });
+      list.appendChild(btn);
+    });
+
+    toggleBtn.textContent = 'Zaznacz wszystkie';
+    toggleBtn.addEventListener('click', () => {
+      const btns = [...list.querySelectorAll('.word-sel-btn')];
+      const anyUnselected = btns.some(b => !b.classList.contains('selected'));
+      btns.forEach(b => b.classList.toggle('selected', anyUnselected));
+      toggleBtn.textContent = anyUnselected ? 'Odznacz wszystkie' : 'Zaznacz wszystkie';
+      updateWordsCount();
+    });
+
+    header.appendChild(title);
+    header.appendChild(toggleBtn);
+    section.appendChild(header);
+    section.appendChild(list);
+    wordsSelector.appendChild(section);
+  });
+  updateWordsCount();
+}
+
+function getSelectedWords() {
+  return [...wordsSelector.querySelectorAll('.word-sel-btn.selected')]
+    .map(btn => ALL_WORDS.find(w => w.pl === btn.dataset.pl))
+    .filter(Boolean);
+}
+
+function updateWordsCount() {
+  const count = wordsSelector.querySelectorAll('.word-sel-btn.selected').length;
+  wordsSelectedCount.textContent = `Wybrano: ${count}`;
+  wordsStartBtn.disabled = count < 2;
+}
+
+function initDictMode() {
+  const savedWords = getSavedWords() || [];
+  const savedSet = new Set(savedWords.map(w => w.pl));
+  buildWordsSelector(savedSet);
+}
+
+wordsStartBtn.addEventListener('click', () => {
+  const pool = getSelectedWords();
+  if (pool.length >= 2) {
+    localStorage.setItem(WORDS_LS_KEY, JSON.stringify(pool.map(w => w.pl)));
+    switchToTab('words');
+  }
+});
+
+wqChangeBtn.addEventListener('click', () => {
+  clearTimeout(wqTimer);
+  clearTimeout(wqAnimTimer);
+  switchToTab('dict');
+});
+
+hiraganaChangeBtn.addEventListener('click', () => {
+  clearTimeout(autoAdvanceTimer);
+  switchToTab('dict');
+});
 
 /* =========================================================
    Tryb: Znaki
@@ -566,32 +653,27 @@ cqChangeBtn.addEventListener('click', () => {
 
 cqChoices.forEach(btn => btn.addEventListener('click', () => handleCharAnswer(btn)));
 
-document.querySelectorAll('.mode-nav__tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.mode-nav__tab').forEach(t => {
-      t.classList.remove('active');
-      t.setAttribute('aria-selected', 'false');
-    });
-    tab.classList.add('active');
-    tab.setAttribute('aria-selected', 'true');
-
-    const mode = tab.dataset.mode;
-    document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
-    document.getElementById(`mode-${mode}`).classList.remove('hidden');
-
-    clearTimeout(autoAdvanceTimer);
-    clearTimeout(wqTimer);
-    clearTimeout(wqAnimTimer);
-    clearTimeout(cqTimer);
-
-    if (mode === 'words') loadWordQuiz();
-    if (mode === 'chars') initCharsMode();
-    if (mode === 'dict') {
-      buildDictTable(newWords,    'dict-newWords');
-      buildDictTable(reviewSoon,  'dict-reviewSoon');
-      buildDictTable(reviewLater, 'dict-reviewLater');
-    }
+function switchToTab(mode) {
+  document.querySelectorAll('.mode-nav__tab').forEach(t => {
+    const active = t.dataset.mode === mode;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
   });
+  document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById(`mode-${mode}`).classList.remove('hidden');
+
+  clearTimeout(autoAdvanceTimer);
+  clearTimeout(wqTimer);
+  clearTimeout(wqAnimTimer);
+  clearTimeout(cqTimer);
+
+  if (mode === 'words') loadWordQuiz();
+  if (mode === 'chars') initCharsMode();
+  if (mode === 'dict')  initDictMode();
+}
+
+document.querySelectorAll('.mode-nav__tab').forEach(tab => {
+  tab.addEventListener('click', () => switchToTab(tab.dataset.mode));
 });
 
 /* =========================================================

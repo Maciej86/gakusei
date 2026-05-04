@@ -59,6 +59,7 @@
       <div class="quiz-card__top">
         <span class="mode-badge" id="modeBadge">Polski → Hiragana</span>
         <span class="word-counter" id="wordCounter"></span>
+        <button class="btn-link" id="hiragana-change-btn">Zmień słowa ↩</button>
       </div>
 
       <!-- Wyświetlane słowo -->
@@ -115,6 +116,7 @@
     <div class="quiz-card__top">
       <span class="mode-badge">Słowa</span>
       <span class="word-counter" id="wq-counter"></span>
+      <button class="btn-link" id="wq-change-btn">Zmień słowa ↩</button>
     </div>
 
     <section class="prompt-section">
@@ -135,19 +137,17 @@
 </div>
 
     <div id="mode-dict" class="mode-panel hidden">
-      <div class="dict-card">
-        <div class="dict-section">
-          <h2 class="dict-section__title">Nowe słowa</h2>
-          <div class="dict-table" id="dict-newWords"></div>
+      <div class="quiz-card">
+        <div class="quiz-card__top">
+          <span class="mode-badge">Słownik</span>
+          <div class="chars-setup__top-bar">
+            <span class="word-counter" id="words-selected-count">Wybrano: 0</span>
+          </div>
         </div>
-        <div class="dict-section">
-          <h2 class="dict-section__title">Powtórz wkrótce</h2>
-          <div class="dict-table" id="dict-reviewSoon"></div>
-        </div>
-        <div class="dict-section">
-          <h2 class="dict-section__title">Powtórz później</h2>
-          <div class="dict-table" id="dict-reviewLater"></div>
-        </div>
+        <div id="words-selector"></div>
+        <section class="actions">
+          <button class="btn btn--check" id="words-start-btn" disabled>Ćwicz słowa →</button>
+        </section>
       </div>
     </div>
 

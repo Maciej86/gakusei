@@ -885,3 +885,58 @@ button { font-family: var(--font-ui); cursor: pointer; border: none; background:
 
 .kana-sel-btn.selected .kana-sel-btn__h { color: var(--red-bright); }
 .kana-sel-btn.selected .kana-sel-btn__r { color: var(--red-bright); opacity: .7; }
+
+/* =========================================================
+   Wybór słów (Słownik)
+   ========================================================= */
+.word-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.word-sel-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 2px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--surface-hi);
+  cursor: pointer;
+  transition: border-color .15s, background .15s;
+  text-align: left;
+  user-select: none;
+}
+
+.word-sel-btn:hover { background: var(--surface-hihi); border-color: var(--text-3); }
+
+.word-sel-btn.selected {
+  border-color: var(--red-bright);
+  background: var(--red-glow-soft);
+}
+
+.word-sel-btn__pl {
+  font-size: 14px;
+  color: var(--text-1);
+  flex: 1;
+}
+
+.word-sel-btn__romaji {
+  font-size: 12px;
+  color: var(--text-2);
+  letter-spacing: .03em;
+}
+
+.word-sel-btn__jp {
+  font-family: var(--font-jp);
+  font-size: 16px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.word-sel-btn.selected .word-sel-btn__pl     { color: var(--red-bright); }
+.word-sel-btn.selected .word-sel-btn__romaji { color: var(--red-bright); }
+.word-sel-btn.selected .word-sel-btn__jp     { color: var(--red-bright); opacity: .7; }
