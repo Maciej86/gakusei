@@ -163,7 +163,7 @@ function pickRandomWord() {
   const saved = getSavedWords();
   if (saved) return saved[Math.floor(Math.random() * saved.length)];
   const r = Math.random();
-  const pool = r < 0.5 ? newWords : r < 0.8 ? reviewSoon : reviewLater;
+  const pool = r < 0.6 ? newWords : r < 0.85 ? reviewSoon : reviewLater;
   if (!pool.length) return ALL_WORDS[Math.floor(Math.random() * ALL_WORDS.length)];
   return pool[Math.floor(Math.random() * pool.length)];
 }
